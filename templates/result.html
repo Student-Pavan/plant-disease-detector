@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Prediction Result – Plant Disease Detector</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+</head>
+<body>
+  <header>
+    <div class="header-inner">
+      <span class="logo">🌿</span>
+      <h1>Plant Disease Detector</h1>
+      <p class="tagline">AI-powered diagnosis for your plants.</p>
+    </div>
+  </header>
+
+  <main>
+    <section class="card result-card">
+
+      <h2 class="result-title">
+        {% if "Healthy" in result.label %}
+          ✅ Plant is Healthy!
+        {% else %}
+          ⚠️ Disease Detected
+        {% endif %}
+      </h2>
+
+      <div class="result-badge {% if 'Healthy' in result.label %}badge-healthy{% else %}badge-disease{% endif %}">
+        {{ result.label }}
+      </div>
+
+      <div class="confidence-section">
+        <p class="confidence-label">Confidence</p>
+        <div class="confidence-bar-bg">
+          <div class="confidence-bar" style="width: {{ result.confidence }}%;">
+            {{ result.confidence }}%
+          </div>
+        </div>
+      </div>
+
+      <p class="result-description">{{ result.description }}</p>
+
+      <h3 class="top5-heading">Top 5 Predictions</h3>
+      <ul class="top5-list">
+        {% for item in result.top5 %}
+        <li class="top5-item {% if loop.first %}top5-best{% endif %}">
+          <span class="top5-label">{{ item.label }}</span>
+          <div class="top5-bar-bg">
+            <div class="top5-bar" style="width: {{ [item.confidence, 100] | min }}%;"></div>
+          </div>
+          <span class="top5-pct">{{ item.confidence }}%</span>
+        </li>
+        {% endfor %}
+      </ul>
+
+      <a href="{{ url_for('index') }}" class="btn-primary btn-back">⬅ Analyse Another Leaf</a>
+    </section>
+  </main>
+
+  <footer>
+    <p>Plant Disease Detector &copy; 2025 &mdash; Powered by AI</p>
+  </footer>
+</body>
+</html>
